@@ -1,0 +1,60 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "windows", "debian-openssl-3.0.x"]
+}
+
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+
+model Autor {
+  id       Int  @id @default(autoincrement())
+  nome     String  @db.VarChar(255)
+  email    String  @unique @db.VarChar(255)
+  telefone String? @db.VarChar(20)
+  bio      String?
+  livros   Livro[]
+}
+
+
+
+
+model Livro {
+  id          Int   @id @default(autoincrement())
+  titulo      String
+  resumo      String?
+  ano         Int
+  paginas     Int?
+  isbn        String
+  categoria   Categoria @relation(fields: [categoria_id], references: [id])
+  categoria_id Int
+  editora     Editora   @relation(fields: [editora_id], references: [id])
+  editora_id  Int
+  autor       Autor     @relation(fields: [autor_id], references: [id])
+  autor_id    Int
+}
+
+
+
+
+model Categoria {
+  id    Int @id @default(autoincrement())
+  nome  String @db.VarChar(50)
+  livros Livro[]
+}
+
+
+
+
+model Editora {
+  id       Int  @id @default(autoincrement())
+  nome     String  @db.VarChar(255)
+  endereco String?
+  telefone String? @db.VarChar(20)
+  livros   Livro[]
+}
